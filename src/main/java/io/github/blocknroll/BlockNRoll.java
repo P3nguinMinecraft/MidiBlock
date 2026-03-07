@@ -19,26 +19,27 @@ public class BlockNRoll implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(Command::register);
     }
 
-    public static int load(String filename) {
+    public static void load(String filename) {
         File file = new File(filename + Constants.MID_EXTENSION);
-        return load(file);
+        load(file);
     }
-    public static int load(File file) {
-        String filename = file.getName().replaceFirst("\\.[^.]+$", "");
-        ChatUtils.sendChatMessage("Loading file " + filename + Constants.MID_EXTENSION);
-        if (!file.exists()) {
-            ChatUtils.sendChatMessage("File not found: " + filename + Constants.MID_EXTENSION);
-            return 0;
-        }
-        long start = System.currentTimeMillis();
-        BlockNRoll.LOGGER.info("Starting: {}ms", System.currentTimeMillis() - start);
-        MIDI midi = new MIDI().fromFile(file);
-        BlockNRoll.LOGGER.info("Loaded from MIDI: {}ms", System.currentTimeMillis() - start);
-        Structure structure = new Structure(filename).fromSong(midi.song);
-        BlockNRoll.LOGGER.info("Built Structure: {}ms", System.currentTimeMillis() - start);
-        Schematic.saveStructure(structure, new File(Constants.OUTPUT_FOLDER + filename + Constants.SCHEM_EXTENSION));
-        BlockNRoll.LOGGER.info("Saved Schematic: {}ms", System.currentTimeMillis() - start);
-        ChatUtils.sendChatMessage("Done!");
-        return 1;
+    public static void load(File file) {
+        new Thread(() -> {
+            String filename = file.getName().replaceFirst("\\.[^.]+$", "");
+            ChatUtils.sendChatMessage("Loading file " + filename + Constants.MID_EXTENSION);
+            if (!file.exists()) {
+                ChatUtils.sendChatMessage("File not found: " + filename + Constants.MID_EXTENSION);
+                return;
+            }
+            long start = System.currentTimeMillis();
+            BlockNRoll.LOGGER.info("Starting: {}ms", System.currentTimeMillis() - start);
+            MIDI midi = new MIDI().fromFile(file);
+            BlockNRoll.LOGGER.info("Loaded from MIDI: {}ms", System.currentTimeMillis() - start);
+            Structure structure = new Structure(filename).fromSong(midi.song);
+            BlockNRoll.LOGGER.info("Built Structure: {}ms", System.currentTimeMillis() - start);
+            Schematic.saveStructure(structure, new File(Constants.OUTPUT_FOLDER + filename + Constants.SCHEM_EXTENSION));
+            BlockNRoll.LOGGER.info("Saved Schematic: {}ms", System.currentTimeMillis() - start);
+            ChatUtils.sendChatMessage("Done!");
+        }).start();
     }
 }
