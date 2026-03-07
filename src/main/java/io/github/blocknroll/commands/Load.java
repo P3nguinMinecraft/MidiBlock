@@ -3,7 +3,9 @@ package io.github.blocknroll.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.blocknroll.ChatUtils;
+import io.github.blocknroll.litematic.Litematic;
 import io.github.blocknroll.midi.MIDI;
+import io.github.blocknroll.structure.Structure;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
@@ -22,7 +24,8 @@ public class Load {
                     String filename = StringArgumentType.getString(context, "filename");
                     File file = new File(filename);
                     MIDI midi = new MIDI().fromFile(file);
-                    // TODO: Implement load logic
+                    Structure structure = new Structure().fromSong(midi.song);
+                    Litematic.save(Litematic.fromStructure(structure), new File("blocknroll.litematic"));
                     ChatUtils.sendChatMessage("Done!");
                     return SINGLE_SUCCESS;
                 })

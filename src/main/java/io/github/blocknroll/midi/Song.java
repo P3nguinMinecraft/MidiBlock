@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Song {
-    private ArrayList<Note> song;
+    private final ArrayList<Note> song;
 
     public Song() {
         this.song = new ArrayList<>();
@@ -73,7 +73,7 @@ public class Song {
 
             for (int tick = 0; tick < counts.length; tick++) {
                 if (counts[tick] > 0 && !notesByTick[tick].isEmpty()) {
-                    Note n = notesByTick[tick].remove(0);
+                    Note n = notesByTick[tick].removeFirst();
                     channel.addNote(n, tick);
                     counts[tick]--;
                 }

@@ -14,15 +14,10 @@ public class MIDI {
     }
 
     public MIDI fromFile(File file) {
-        MIDI midi = new MIDI();
         try {
             Sequence sequence = MidiSystem.getSequence(file);
-            int resolution = sequence.getResolution(); // Ticks per quarter note
-
-            // A 16th note is Resolution / 4
+            int resolution = sequence.getResolution();
             double midiTicksPer16th = resolution / 4.0;
-
-            // We want every 16th note to take 8 Game Ticks (4 Redstone Ticks)
             double scaleFactor = 8.0 / midiTicksPer16th;
 
             for (Track track : sequence.getTracks()) {
@@ -31,7 +26,6 @@ public class MIDI {
                     if (event.getMessage() instanceof ShortMessage sm) {
                         if (sm.getCommand() == ShortMessage.NOTE_ON && sm.getData2() > 0) {
 
-                            // Apply the scale factor to the raw MIDI tick
                             int tick = (int) Math.round(event.getTick() * scaleFactor);
 
                             int rawPitch = sm.getData1();
@@ -49,6 +43,6 @@ public class MIDI {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return midi;
+        return this;
     }
 }

@@ -9,14 +9,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test suite for Song.partition() functionality.
- * Tests the distribution of concurrent notes into separate channels.
- */
 @DisplayName("Song Partitioning Tests")
 class SongPartitionTest {
     private Song song;
-    private static final Object MOCK_INSTRUMENT = new Object(); // Mock instrument to avoid Minecraft initialization
 
     @BeforeEach
     void setUp() {
@@ -71,7 +66,6 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(3, channels.size(), "Three concurrent notes should produce 3 channels");
 
-        // Each channel should contain exactly one note at tick 0
         for (Channel channel : channels) {
             assertEquals(1, channel.getLength(), "Each channel should have length 1");
             assertNotNull(channel.getNote(0), "Each channel should have a note at tick 0");
@@ -81,25 +75,20 @@ class SongPartitionTest {
     @Test
     @DisplayName("Complex partitioning with varying concurrent notes")
     void testComplexPartitioningScenario() {
-        // Tick 0: 2 concurrent notes
         song.addNote(new Note(5, 0, null, 0));
         song.addNote(new Note(7, 0, null, 0));
 
-        // Tick 1: 1 note
         song.addNote(new Note(8, 0, null, 1));
 
-        // Tick 2: 3 concurrent notes
         song.addNote(new Note(9, 0, null, 2));
         song.addNote(new Note(10, 0, null, 2));
         song.addNote(new Note(11, 0, null, 2));
 
-        // Tick 3: 1 note
         song.addNote(new Note(12, 0, null, 3));
 
         ArrayList<Channel> channels = song.partition();
         assertEquals(3, channels.size(), "Maximum concurrent notes is 3, should produce 3 channels");
 
-        // Verify all channels have the expected length
         for (Channel channel : channels) {
             assertEquals(4, channel.getLength(), "All channels should have length 4 (max tick is 3)");
         }
@@ -138,7 +127,6 @@ class SongPartitionTest {
     @Test
     @DisplayName("Partitioning should distribute all notes across channels")
     void testPartitioningDistributesNotesCorrectly() {
-        // Create a scenario where notes are distributed across channels
         song.addNote(new Note(5, 0, null, 0));
         song.addNote(new Note(7, 0, null, 0));
         song.addNote(new Note(8, 0, null, 0));
@@ -146,7 +134,6 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(3, channels.size());
 
-        // Count total notes across all channels
         int totalNotes = 0;
         for (Channel channel : channels) {
             for (Note note : channel.getNotes()) {
@@ -181,7 +168,6 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(2, channels.size());
 
-        // Verify notes are at correct positions
         boolean noteAt0Found = false;
         boolean noteAt3Found = false;
 
@@ -222,7 +208,7 @@ class SongPartitionTest {
         song.addNote(new Note(9, 0, null, 5));
 
         ArrayList<Channel> channels = song.partition();
-        int expectedLength = 6; // 0 to 5
+        int expectedLength = 6;
 
         for (Channel channel : channels) {
             assertEquals(expectedLength, channel.getLength(),
@@ -237,9 +223,6 @@ class SongPartitionTest {
         assertEquals(0, counts.length, "Empty song should return empty note count array");
     }
 
-    /**
-     * Helper method to count non-null notes in a channel.
-     */
     private int countNonNullNotes(Channel channel) {
         int count = 0;
         for (Note note : channel.getNotes()) {
