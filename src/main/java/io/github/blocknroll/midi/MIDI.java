@@ -13,7 +13,8 @@ public class MIDI {
         song = new Song();
     }
 
-    public void fromFile(File file) {
+    public MIDI fromFile(File file) {
+        MIDI midi = new MIDI();
         try {
             Sequence sequence = MidiSystem.getSequence(file);
             int resolution = sequence.getResolution(); // Ticks per quarter note
@@ -48,5 +49,6 @@ public class MIDI {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return midi;
     }
 }

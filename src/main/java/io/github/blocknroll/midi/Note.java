@@ -29,8 +29,6 @@ public class Note {
         return instrument;
     }
 
-
-
     public int getTick() {
         return tick;
     }
