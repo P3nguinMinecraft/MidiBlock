@@ -1,8 +1,9 @@
 package io.github.blocknroll.midi;
 
+import io.github.blocknroll.structure.Channel;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public class Song {
     private ArrayList<Note> song;
@@ -23,17 +24,58 @@ public class Song {
         return song;
     }
 
-    public int getMaxConcurrent() {
+    public int[] getNoteCount() {
         if (song.isEmpty()) {
-            return 0;
+            return new int[0];
+        }
+        int maxTick = 0;
+        for (Note n : song) {
+            if (n.getTick() > maxTick) {
+                maxTick = n.getTick();
+            }
+        }
+        int[] counts = new int[maxTick + 1];
+        for (Note n : song) {
+            counts[n.getTick()]++;
+        }
+        return counts;
+    }
+
+    private int getMax(int[] arr) {
+        return Arrays.stream(arr).max().orElse(0);
+    }
+
+    public int getMaxConcurrent() {
+        return getMax(getNoteCount());
+    }
+
+    public ArrayList<Channel> partition() {
+        if (song.isEmpty()) {
+            return new ArrayList<>();
         }
 
-        Map<Integer, Integer> tickCounts = new HashMap<>();
-        for (Note note : song) {
-            int tick = note.getTick();
-            tickCounts.put(tick, tickCounts.getOrDefault(tick, 0) + 1);
+        ArrayList<Channel> channels = new ArrayList<>();
+        int[] counts = getNoteCount();
+        int max = getMax(counts);
+
+        while (max > 0) {
+            for (int tick = 0; tick < counts.length; tick++) {
+                if (counts[tick] == max) {
+                    Channel channel = new Channel(counts.length);
+
+                    for (Note n : song) {
+                        if (n.getTick() == tick && counts[tick] > 0) {
+                            channel.addNote(n, n.getTick());
+                            counts[tick]--;
+                        }
+                    }
+                    channels.add(channel);
+                    break;
+                }
+            }
+            max = getMax(counts);
         }
-        return tickCounts.values().stream().mapToInt(Integer::intValue).max().orElse(0);
+        return channels;
     }
 
     @Override
