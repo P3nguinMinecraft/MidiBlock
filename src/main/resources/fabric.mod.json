@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "blocknroll",
+	"version": "${version}",
+	"name": "Block N Roll",
+	"description": "A mod that converts MIDI files to Note Block machine schematics.",
+	"authors": [
+		],
+	"contact": {
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/blocknroll/icon.png",
+	"environment": "*",
+	"entrypoints": {
+        "main": [
+
+        ],
+		"client": [
+            "io.github.blocknroll.BlockNRoll"
+		]
+	},
+	"mixins": [
+        "blocknroll.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": ">=1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	},
+	"accessWidener" : "blocknroll.accesswidener"
+}
