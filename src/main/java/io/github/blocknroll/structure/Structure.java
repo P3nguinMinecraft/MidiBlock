@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +16,92 @@ import java.util.List;
 public class Structure {
     private ArrayList<Block> blocks;
     private ArrayList<BlockPos> blockPos;
+    private String name;
 
-    public Structure() {
+    public Structure(String name) {
         blocks = new ArrayList<>();
         blockPos = new ArrayList<>();
+        this.name = name;
     }
 
     public void add(Block block) {
-        if (blockPos.contains(block.getPosition())) throw new IllegalArgumentException("Block already exists at position " + block.getPosition());
+        if (blockPos.contains(block.getPosition()))
+            throw new IllegalArgumentException("Block already exists at position " + block.getPosition());
         blockPos.add(block.getPosition());
         blocks.add(block);
     }
+    public Vector3d getMin() {
+        if (blockPos.isEmpty()) {
+            return new Vector3d(0, 0, 0);
+        }
 
-    public List<Block> get() {
-        return blocks;
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+
+        for (BlockPos pos : blockPos) {
+            minX = Math.min(minX, pos.getX());
+            minY = Math.min(minY, pos.getY());
+            minZ = Math.min(minZ, pos.getZ());
+        }
+
+        return new Vector3d(minX, minY, minZ);
     }
 
-    public void shift(BlockPos pos) {
-        for (Block block : blocks) block.getPosition().offset(pos);
+    public Vector3d getMax() {
+        if (blockPos.isEmpty()) {
+            return new Vector3d(0, 0, 0);
+        }
+
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
+
+        for (BlockPos pos : blockPos) {
+            maxX = Math.max(maxX, pos.getX());
+            maxY = Math.max(maxY, pos.getY());
+            maxZ = Math.max(maxZ, pos.getZ());
+        }
+
+        return new Vector3d(maxX, maxY, maxZ);
+    }
+
+    public Vector3d getSize() {
+        Vector3d max = getMax();
+        Vector3d min = getMin();
+        return new Vector3d(
+                max.x - min.x + 1,
+                max.y - min.y + 1,
+                max.z - min.z + 1
+        );
+    }
+
+    public void shift() {
+        Vector3d min = getMin();
+        int offsetX = (int) min.x;
+        int offsetY = (int) min.y;
+        int offsetZ = (int) min.z;
+
+        for (int i = 0; i < blockPos.size(); i++) {
+            BlockPos oldPos = blockPos.get(i);
+            BlockPos newPos = new BlockPos(
+                    oldPos.getX() - offsetX,
+                    oldPos.getY() - offsetY,
+                    oldPos.getZ() - offsetZ
+            );
+            blockPos.set(i, newPos);
+
+            Block oldBlock = blocks.get(i);
+            blocks.set(i, new Block(newPos, oldBlock.getState()));
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
     }
 
     private void init(int middle) {
