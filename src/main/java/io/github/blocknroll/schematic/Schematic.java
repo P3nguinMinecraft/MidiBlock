@@ -88,6 +88,7 @@ public class Schematic {
     }
 
     public static boolean saveStructure(Structure structure, File file) {
+        structure.shift();
         try {
             CompoundTag root = new CompoundTag();
 

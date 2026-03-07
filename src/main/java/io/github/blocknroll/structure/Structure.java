@@ -15,10 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Structure {
-    // ...existing code...
-    private ArrayList<Block> blocks;
-    private ArrayList<BlockPos> blockPos;
-    private String name;
+    private final ArrayList<Block> blocks;
+    private final ArrayList<BlockPos> blockPos;
+    private final String name;
 
     public Structure(String name) {
         blocks = new ArrayList<>();
@@ -106,19 +105,19 @@ public class Structure {
         return blocks;
     }
 
-    private void init(int middle) {
+    private void init(int max) {
         add(new Block(
-                new BlockPos(middle, 1, 0),
+                new BlockPos(max / 2, 1, 0),
                 Config.getButton().defaultBlockState()
                         .setValue(ButtonBlock.FACING, Direction.EAST)
                         .setValue(ButtonBlock.POWERED, false)
                         .setValue(ButtonBlock.FACE, AttachFace.FLOOR)
         ));
         add(new Block(
-                new BlockPos(middle, 0, 0),
+                new BlockPos(max / 2, 0, 0),
                 Config.getFloor().defaultBlockState()
         ));
-        for (int i = 0; i <= middle * 2; i++) {
+        for (int i = 0; i < max; i++) {
             add(new Block(
                     new BlockPos(i, 0, 1),
                     Config.getFloor().defaultBlockState()
@@ -134,19 +133,20 @@ public class Structure {
         for (int i = 0; i < channel.getLength(); i++) {
             Note note = channel.getNote(i);
             int z = i * 2 + startZ;
-            add(new Block(
-                    new BlockPos(x, 0, z),
-                    Config.getFloor().defaultBlockState()
-            ));
-            add(new Block(
-                    new BlockPos(x, 1, z),
-                    Blocks.REPEATER.defaultBlockState()
-                            .setValue(RepeaterBlock.FACING, Direction.NORTH)
-                            .setValue(RepeaterBlock.DELAY, 1)
-                            .setValue(RepeaterBlock.LOCKED, false)
-                            .setValue(RepeaterBlock.POWERED, false)
-            ));
-
+            if (x % 2 == 1) {
+                add(new Block(
+                        new BlockPos(x, 0, z),
+                        Config.getFloor().defaultBlockState()
+                ));
+                add(new Block(
+                        new BlockPos(x, 1, z),
+                        Blocks.REPEATER.defaultBlockState()
+                                .setValue(RepeaterBlock.FACING, Direction.NORTH)
+                                .setValue(RepeaterBlock.DELAY, 1)
+                                .setValue(RepeaterBlock.LOCKED, false)
+                                .setValue(RepeaterBlock.POWERED, false)
+                ));
+            }
             if (note != null) {
                 Instrument inst = note.getInstrument();
 
@@ -158,7 +158,6 @@ public class Structure {
                                 .setValue(NoteBlock.NOTE, note.getPitch())
                 ));
 
-                // Place the instrument's required block underneath (skip if AIR / harp)
                 if (inst != Instrument.HARP) {
                     add(new Block(
                             new BlockPos(x, 0, z + 1),
@@ -187,9 +186,10 @@ public class Structure {
         ArrayList<Channel> parts = song.partition();
         BlockNRoll.LOGGER.info("Partitioned: {}ms", System.currentTimeMillis() - start);
         int x = 0;
+        if (parts.size() < 2) x++;
         for (Channel channel : parts) {
             buildPart(channel, x, 2);
-            x += 2;
+            x++;
         }
         BlockNRoll.LOGGER.info("Build done: {}ms", System.currentTimeMillis() - start);
 

@@ -103,6 +103,8 @@ public enum Instrument {
     public int toMcPitch(int rawMidiNote) {
         if (!isPitched()) return 0;
         int pitch = rawMidiNote - lowMidi;
-        return Math.max(0, Math.min(24, pitch));
+        while (pitch < 0) pitch += 12;
+        while (pitch > 24) pitch -= 12;
+        return pitch;
     }
 }
