@@ -6,7 +6,6 @@ import io.github.blocknroll.structure.Structure;
 import net.minecraft.nbt.*;
 
 import java.io.*;
-import java.util.zip.GZIPOutputStream;
 public class Schematic {
 
     private static CompoundTag createMetadata(Structure structure) {
@@ -104,9 +103,7 @@ public class Schematic {
                 file.getParentFile().mkdirs();
             }
 
-            try (DataOutputStream dos = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
-                root.write(dos);
-            }
+            NbtIo.writeCompressed(root, file.toPath());
 
             return true;
         } catch (IOException e) {

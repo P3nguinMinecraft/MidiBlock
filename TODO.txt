@@ -1,0 +1,2 @@
+GUI Config for max slowdown and blocks
+Instruments + octave corrections

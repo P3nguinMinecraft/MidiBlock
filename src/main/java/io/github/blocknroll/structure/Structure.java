@@ -1,5 +1,6 @@
 package io.github.blocknroll.structure;
 
+import io.github.blocknroll.BlockNRoll;
 import io.github.blocknroll.Config;
 import io.github.blocknroll.midi.Note;
 import io.github.blocknroll.midi.Song;
@@ -114,7 +115,7 @@ public class Structure {
         ));
         add(new Block(
                 new BlockPos(middle, 0, 0),
-                Config.BUTTON.defaultBlockState()
+                Config.FLOOR.defaultBlockState()
         ));
         for (int i = 0; i <= middle * 2; i++) {
             add(new Block(
@@ -139,7 +140,7 @@ public class Structure {
             add(new Block(
                     new BlockPos(x, 1, z),
                     Blocks.REPEATER.defaultBlockState()
-                            .setValue(RepeaterBlock.FACING, Direction.SOUTH)
+                            .setValue(RepeaterBlock.FACING, Direction.NORTH)
                             .setValue(RepeaterBlock.DELAY, 1)
                             .setValue(RepeaterBlock.LOCKED, false)
                             .setValue(RepeaterBlock.POWERED, false)
@@ -171,14 +172,22 @@ public class Structure {
     }
 
     public Structure fromSong(Song song) {
+        long start = System.currentTimeMillis();
         int max = song.getMaxConcurrent();
+        BlockNRoll.LOGGER.info("Song size: {}", song.getNotes().size());
+        BlockNRoll.LOGGER.info("Max tick: {}", song.getNoteCount().length);
+
+        BlockNRoll.LOGGER.info("Starting structure: {}ms", System.currentTimeMillis() - start);
         init(max - 1);
+        BlockNRoll.LOGGER.info("Init: {}ms", System.currentTimeMillis() - start);
         ArrayList<Channel> parts = song.partition();
+        BlockNRoll.LOGGER.info("Partitioned: {}ms", System.currentTimeMillis() - start);
         int x = 0;
         for (Channel channel : parts) {
             buildPart(channel, x, 2);
             x += 2;
         }
+        BlockNRoll.LOGGER.info("Build done: {}ms", System.currentTimeMillis() - start);
 
         return this;
     }

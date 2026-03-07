@@ -1,5 +1,6 @@
 package io.github.blocknroll.gui;
 
+import io.github.blocknroll.BlockNRoll;
 import io.github.blocknroll.ChatUtils;
 import io.github.blocknroll.Constants;
 import io.github.blocknroll.midi.MIDI;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class MidiDropScreen extends Screen {
 
-    public MidiDropScreen() {
+    public MidiDropScreen(Screen parent) {
         super(Component.literal("Block N Roll"));
     }
 
@@ -36,27 +37,25 @@ public class MidiDropScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         guiGraphics.fill(this.width / 2, 4, this.width / 2 + 1, this.height - 5, 0xFFC7C0C0);
 
         guiGraphics.fill(this.width / 2 + 6, 5, this.width - 5, 20, 0x3FC7C0C0);
-        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("Options"), this.width / 2 + 10, 9, 0xFFFFFFFF);
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("Drag and Drop here"), this.width / 2 + 10, 9, 0xFFFFFFFF);
 
         guiGraphics.drawCenteredString(
                 this.font,
                 Component.literal("Drag & Drop your .mid file here!").withStyle(ChatFormatting.AQUA),
-                this.width / 4, // Centers it on the left half of the screen
+                this.width / 4,
                 this.height / 2,
                 0xFFFFFF
         );
-
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.minecraft != null && this.minecraft.level == null) {
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (this.minecraft.level == null) {
             super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         } else {
             guiGraphics.fill(0, 0, this.width, this.height, 0x90202020);
@@ -67,32 +66,11 @@ public class MidiDropScreen extends Screen {
     public void onFilesDrop(List<Path> paths) {
         for (Path path : paths) {
             File file = path.toFile();
-            String fileName = file.getName().toLowerCase();
+            String filename = file.getName().toLowerCase();
 
-            if (fileName.endsWith(".mid")) {
-                ChatUtils.sendChatMessage("Processing MIDI: " + file.getName());
-
-                try {
-                    MIDI midi = new MIDI().fromFile(file);
-                    Structure structure = new Structure(fileName).fromSong(midi.song);
-                    String nameWithoutExt = file.getName().substring(0, file.getName().lastIndexOf('.'));
-                    File outputFile = new File(nameWithoutExt + Constants.SCHEM_EXTENSION);
-
-                    boolean success = Schematic.saveStructure(structure, outputFile);
-
-                    if (success) {
-                        ChatUtils.sendChatMessage("Done! Saved as: " + outputFile.getAbsolutePath());
-                    } else {
-                        ChatUtils.sendChatMessage("Failed to save the schematic.");
-                    }
-                } catch (Exception e) {
-                    ChatUtils.sendChatMessage("Error processing file.");
-                    e.printStackTrace();
-                }
-
-                if (this.minecraft != null) {
-                    this.minecraft.setScreen(null);
-                }
+            if (filename.endsWith(".mid")) {
+                BlockNRoll.load(filename);
+                this.minecraft.setScreen(null);
                 return;
             }
         }

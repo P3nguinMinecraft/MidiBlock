@@ -11,4 +11,6 @@ public class Config {
     public static Block FLOOR = DEFAULT_FLOOR;
     public static Block CONDUCTIVE = DEFAULT_CONDUCTIVE;
     public static Block BUTTON = DEFAULT_BUTTON;
+
+    public static float MAX_SLOWDOWN_PERCENT = 0.3F;
 }

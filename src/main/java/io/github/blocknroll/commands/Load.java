@@ -3,6 +3,7 @@ package io.github.blocknroll.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import io.github.blocknroll.BlockNRoll;
 import io.github.blocknroll.ChatUtils;
 import io.github.blocknroll.Constants;
 import io.github.blocknroll.schematic.Schematic;
@@ -21,15 +22,7 @@ public class Load {
             .then(ClientCommandManager.argument("filename", StringArgumentType.greedyString())
                 .executes((context) -> {
                     String filename = StringArgumentType.getString(context, "filename");
-                    File file = new File(filename + Constants.MID_EXTENSION);
-                    if (!file.exists()) {
-                        ChatUtils.sendChatMessage("File not found: " + filename + Constants.MID_EXTENSION);
-                        return Command.SINGLE_SUCCESS;
-                    }
-                    MIDI midi = new MIDI().fromFile(file);
-                    Structure structure = new Structure(filename).fromSong(midi.song);
-                    Schematic.saveStructure(structure, new File(filename + Constants.SCHEM_EXTENSION));
-                    ChatUtils.sendChatMessage("Done!");
+                    BlockNRoll.load(filename);
                     return Command.SINGLE_SUCCESS;
                 })
             );

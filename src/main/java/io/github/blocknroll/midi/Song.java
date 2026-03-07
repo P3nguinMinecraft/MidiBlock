@@ -20,10 +20,6 @@ public class Song {
         return song;
     }
 
-    public ArrayList<Note> getSong() {
-        return song;
-    }
-
     public int[] getNoteCount() {
         if (song.isEmpty()) {
             return new int[0];

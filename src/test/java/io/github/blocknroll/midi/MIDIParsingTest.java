@@ -40,49 +40,60 @@ class MIDIParsingTest {
     @Test
     @DisplayName("Pitch extraction should correctly convert MIDI note numbers")
     void testPitchExtraction() {
+        // Minecraft note blocks: pitch 0 = F#3 (MIDI 42) to pitch 24 = F#5 (MIDI 66)
+        // Middle C (MIDI 60) → 60 - 42 = 18
         int midiNote = 60;
-        int expectedPitch = midiNote % 12;
-        int expectedOctave = (midiNote / 12) - 1;
+        int expectedMcPitch = midiNote - 42;
 
-        assertEquals(0, expectedPitch, "Middle C should have pitch 0");
-        assertEquals(4, expectedOctave, "Middle C should be in octave 4");
+        assertEquals(18, expectedMcPitch, "Middle C should map to MC pitch 18");
     }
 
     @Test
     @DisplayName("Pitch range should be valid for different MIDI notes")
     void testPitchRangeForVariousNotes() {
+        // Minecraft note blocks: pitch 0 = F#3 (MIDI 42) to pitch 24 = F#5 (MIDI 66)
+        // Notes outside this range get octave-shifted into 0-24
         int[] testNotes = {36, 48, 60, 72, 84, 96};
 
         for (int midiNote : testNotes) {
-            int pitch = midiNote % 12;
-            int octave = (midiNote / 12) - 1;
+            int mcPitch = midiNote - 42;
+            while (mcPitch < 0) mcPitch += 12;
+            while (mcPitch > 24) mcPitch -= 12;
 
-            assertTrue(pitch >= 0 && pitch < 12, "Pitch should be between 0 and 11");
-            assertTrue(octave >= -1, "Octave should be non-negative");
+            assertTrue(mcPitch >= 0 && mcPitch <= 24,
+                "MC pitch should be between 0 and 24, got " + mcPitch + " for MIDI " + midiNote);
         }
     }
 
     @Test
     @DisplayName("Tick scaling factor should be calculated correctly")
     void testTickScalingFactor() {
+        // At 120 BPM (default), 500000 µs per quarter note
+        // Resolution 480 → 500000/480 ≈ 1041.67 µs per MIDI tick
+        // 1 redstone tick = 100000 µs
+        // Quarter note (480 ticks) → 500000/100000 = 5 redstone ticks
         int resolution = 480;
-        double midiTicksPer16th = resolution / 4.0;
-        double scaleFactor = 8.0 / midiTicksPer16th;
+        int mpq = 500_000; // 120 BPM
+        double microsPerMidiTick = mpq / (double) resolution;
+        double microsPerRedstoneTick = 100_000.0;
+        int redstoneTick = (int) Math.round((resolution * microsPerMidiTick) / microsPerRedstoneTick);
 
-        assertEquals(0.0667, scaleFactor, 0.001, "Scale factor should be 8 / 120 = 0.0667");
+        assertEquals(5, redstoneTick, "Quarter note at 120 BPM should be 5 redstone ticks");
     }
 
     @Test
-    @DisplayName("Tick scaling should convert MIDI ticks to game ticks")
+    @DisplayName("Tick scaling should convert MIDI ticks to redstone ticks")
     void testTickScaling() {
+        // At 120 BPM (default), a quarter note = 0.5 sec = 5 redstone ticks
         int resolution = 480;
-        double midiTicksPer16th = resolution / 4.0;
-        double scaleFactor = 8.0 / midiTicksPer16th;
+        int mpq = 500_000; // 120 BPM
+        double microsPerMidiTick = mpq / (double) resolution;
+        double microsPerRedstoneTick = 100_000.0;
 
-        int midiTick = resolution;
-        int gameTick = (int) Math.round(midiTick * scaleFactor);
+        int midiTick = resolution; // one quarter note
+        int redstoneTick = (int) Math.round((midiTick * microsPerMidiTick) / microsPerRedstoneTick);
 
-        assertEquals(32, gameTick, "Quarter note should scale to 32 game ticks");
+        assertEquals(5, redstoneTick, "Quarter note at 120 BPM should scale to 5 redstone ticks");
     }
 
     @Test
@@ -104,12 +115,12 @@ class MIDIParsingTest {
     }
 
     @Test
-    @DisplayName("Valid MIDI should contain notes with pitch between 0 and 11")
+    @DisplayName("Valid MIDI should contain notes with pitch between 0 and 24")
     void testValidPitchRange() {
-        for (int i = 0; i < 12; i++) {
-            int midiNote = 60 + i;
-            int pitch = midiNote % 12;
-            assertTrue(pitch >= 0 && pitch <= 11, "Pitch should be within note block range");
+        // MIDI notes 42-66 map directly to MC pitch 0-24
+        for (int midiNote = 42; midiNote <= 66; midiNote++) {
+            int mcPitch = midiNote - 42;
+            assertTrue(mcPitch >= 0 && mcPitch <= 24, "MC pitch should be within note block range 0-24");
         }
     }
 
@@ -147,8 +158,7 @@ class MIDIParsingTest {
         song.addNote(new Note(11, 2, null, 16));
 
         assertEquals(3, song.getNotes().size(), "Song should contain all added notes");
-        assertNotNull(song.getSong(), "Song should have accessible notes list");
-        assertEquals(song.getNotes(), song.getSong(), "getNotes and getSong should return same list");
+        assertNotNull(song.getNotes(), "Song should have accessible notes list");
     }
 
     @Test
@@ -201,38 +211,44 @@ class MIDIParsingTest {
     }
 
     @Test
-    @DisplayName("Octave values should be calculated correctly for MIDI notes")
+    @DisplayName("Octave shift should be calculated correctly for MIDI notes outside MC range")
     void testOctaveCalculation() {
-        int midiNote0 = 0;
-        int octave0 = (midiNote0 / 12) - 1;
-        assertEquals(-1, octave0, "MIDI note 0 should be octave -1");
+        // MIDI 42 = F#3 = MC pitch 0, octaveShift 0
+        int mcPitch42 = 42 - 42;
+        assertEquals(0, mcPitch42, "MIDI 42 (F#3) should be MC pitch 0");
 
-        int midiNote12 = 12;
-        int octave12 = (midiNote12 / 12) - 1;
-        assertEquals(0, octave12, "MIDI note 12 should be octave 0");
+        // MIDI 30 = F#2 → 30-42 = -12, shift up once → 0, octaveShift -1
+        int mcPitch30 = 30 - 42; // -12
+        int shift30 = 0;
+        while (mcPitch30 < 0) { mcPitch30 += 12; shift30--; }
+        assertEquals(0, mcPitch30, "MIDI 30 (F#2) should wrap to MC pitch 0");
+        assertEquals(-1, shift30, "MIDI 30 should have octave shift -1");
 
-        int midiNote60 = 60;
-        int octave60 = (midiNote60 / 12) - 1;
-        assertEquals(4, octave60, "MIDI note 60 should be octave 4");
+        // MIDI 60 = C4 → 60-42 = 18, in range, octaveShift 0
+        int mcPitch60 = 60 - 42;
+        assertEquals(18, mcPitch60, "MIDI 60 (C4) should be MC pitch 18");
 
-        int midiNote127 = 127;
-        int octave127 = (midiNote127 / 12) - 1;
-        assertEquals(9, octave127, "MIDI note 127 should be octave 9");
+        // MIDI 72 = C5 → 72-42 = 30, shift down once → 18, octaveShift +1
+        int mcPitch72 = 72 - 42; // 30
+        int shift72 = 0;
+        while (mcPitch72 > 24) { mcPitch72 -= 12; shift72++; }
+        assertEquals(18, mcPitch72, "MIDI 72 (C5) should wrap to MC pitch 18");
+        assertEquals(1, shift72, "MIDI 72 should have octave shift +1");
     }
 
     @Test
     @DisplayName("Different MIDI resolutions should scale ticks correctly")
     void testTickScalingWithDifferentResolutions() {
         int[] resolutions = {96, 240, 480, 960};
+        int mpq = 500_000; // 120 BPM default
+        double microsPerRedstoneTick = 100_000.0;
 
         for (int resolution : resolutions) {
-            double midiTicksPer16th = resolution / 4.0;
-            double scaleFactor = 8.0 / midiTicksPer16th;
+            double microsPerMidiTick = mpq / (double) resolution;
+            int redstoneTick = (int) Math.round((resolution * microsPerMidiTick) / microsPerRedstoneTick);
 
-            int gameTick = (int) Math.round(resolution * scaleFactor);
-
-            assertEquals(32, gameTick,
-                "Quarter note should always scale to 32 game ticks regardless of resolution");
+            assertEquals(5, redstoneTick,
+                "Quarter note at 120 BPM should always scale to 5 redstone ticks regardless of resolution");
         }
     }
 
@@ -273,6 +289,41 @@ class MIDIParsingTest {
         assertEquals(1, counts[0], "Should have note at tick 0");
         assertEquals(1, counts[5000], "Should have note at tick 5000");
         assertEquals(1, counts[10000], "Should have note at tick 10000");
+    }
+
+    @Test
+    @DisplayName("Slowdown should apply when smallest interval is below 1 redstone tick and within threshold")
+    void testSlowdownWithinThreshold() {
+        // Smallest interval = 80,000 µs (< 100,000 µs = 1 redstone tick)
+        // Required factor = 100,000 / 80,000 = 1.25 → 25% slowdown
+        // MAX_SLOWDOWN_PERCENT = 0.3 (30%) → should apply
+        double smallestInterval = 80_000;
+        double microsPerRedstoneTick = 100_000.0;
+        double requiredFactor = microsPerRedstoneTick / smallestInterval;
+        double slowdownPercent = requiredFactor - 1.0;
+
+        assertEquals(1.25, requiredFactor, 0.001, "Factor should be 1.25");
+        assertEquals(0.25, slowdownPercent, 0.001, "Slowdown should be 25%");
+        assertTrue(slowdownPercent <= 0.3, "25% should be within 30% threshold");
+
+        // After applying factor, smallest interval becomes 100,000 µs = 1 redstone tick
+        double adjusted = smallestInterval * requiredFactor;
+        assertEquals(100_000, adjusted, 0.01, "Adjusted interval should be exactly 1 redstone tick");
+    }
+
+    @Test
+    @DisplayName("Slowdown should NOT apply when required slowdown exceeds threshold")
+    void testSlowdownExceedsThreshold() {
+        // Smallest interval = 50,000 µs → factor = 100,000/50,000 = 2.0 → 100% slowdown
+        // MAX_SLOWDOWN_PERCENT = 0.3 (30%) → should NOT apply
+        double smallestInterval = 50_000;
+        double microsPerRedstoneTick = 100_000.0;
+        double requiredFactor = microsPerRedstoneTick / smallestInterval;
+        double slowdownPercent = requiredFactor - 1.0;
+
+        assertEquals(2.0, requiredFactor, 0.001, "Factor should be 2.0");
+        assertEquals(1.0, slowdownPercent, 0.001, "Slowdown should be 100%");
+        assertFalse(slowdownPercent <= 0.3, "100% should exceed 30% threshold");
     }
 }
 

@@ -15,7 +15,7 @@ public class Gui {
         var command = ClientCommandManager.literal("gui")
             .executes(context -> {
                 Minecraft.getInstance().execute(() -> {
-                    Minecraft.getInstance().setScreen(new MidiDropScreen());
+                    Minecraft.getInstance().setScreen(new MidiDropScreen(Minecraft.getInstance().screen));
                 });
                 return Command.SINGLE_SUCCESS;
             });
