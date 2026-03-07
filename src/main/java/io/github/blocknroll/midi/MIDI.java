@@ -1,5 +1,6 @@
 package io.github.blocknroll.midi;
 
+import io.github.blocknroll.BlockNRoll;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
 import javax.sound.midi.*;
@@ -41,7 +42,8 @@ public class MIDI {
             song.getNotes().sort(Comparator.comparingInt(Note::getTick));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            BlockNRoll.LOGGER.error("Error loading MIDI.");
+            return new MIDI();
         }
         return this;
     }

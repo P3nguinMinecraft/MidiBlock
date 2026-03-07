@@ -6,6 +6,7 @@ import io.github.blocknroll.midi.Song;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
 import java.util.ArrayList;
@@ -38,7 +39,9 @@ public class Structure {
         add(new Block(
                 new BlockPos(middle, 1, 0),
                 Config.BUTTON.defaultBlockState()
-                        .setValue(ButtonBlock.FACING, Direction.UP)
+                        .setValue(ButtonBlock.FACING, Direction.EAST)
+                        .setValue(ButtonBlock.POWERED, false)
+                        .setValue(ButtonBlock.FACE, AttachFace.FLOOR)
         ));
         add(new Block(
                 new BlockPos(middle, 0, 0),

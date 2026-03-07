@@ -77,6 +77,9 @@ processResources {
 
 test {
 	useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
