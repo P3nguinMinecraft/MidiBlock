@@ -4,15 +4,9 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.blocknroll.BlockNRoll;
-import io.github.blocknroll.ChatUtils;
-import io.github.blocknroll.Constants;
-import io.github.blocknroll.schematic.Schematic;
-import io.github.blocknroll.midi.MIDI;
-import io.github.blocknroll.structure.Structure;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
-import java.io.File;
 
 
 public class Load {

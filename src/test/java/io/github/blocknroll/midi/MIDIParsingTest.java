@@ -292,19 +292,19 @@ class MIDIParsingTest {
     }
 
     @Test
-    @DisplayName("Slowdown should apply when smallest interval is below 1 redstone tick and within threshold")
-    void testSlowdownWithinThreshold() {
-        // Smallest interval = 80,000 µs (< 100,000 µs = 1 redstone tick)
-        // Required factor = 100,000 / 80,000 = 1.25 → 25% slowdown
-        // MAX_SLOWDOWN_PERCENT = 0.3 (30%) → should apply
+    @DisplayName("BPM adaptation should apply when change is within threshold")
+    void testAdaptWithinThreshold() {
+        // Smallest interval = 80,000 µs (< 100,000 µs = 1 redstone tick) → needs slowdown
+        // Required factor = 100,000 / 80,000 = 1.25 → 25% change
+        // MAX_CHANGE_PERCENT = 30 → should apply
         double smallestInterval = 80_000;
         double microsPerRedstoneTick = 100_000.0;
         double requiredFactor = microsPerRedstoneTick / smallestInterval;
-        double slowdownPercent = requiredFactor - 1.0;
+        double changePercent = Math.abs(requiredFactor - 1.0);
 
         assertEquals(1.25, requiredFactor, 0.001, "Factor should be 1.25");
-        assertEquals(0.25, slowdownPercent, 0.001, "Slowdown should be 25%");
-        assertTrue(slowdownPercent <= 0.3, "25% should be within 30% threshold");
+        assertEquals(0.25, changePercent, 0.001, "Change should be 25%");
+        assertTrue(changePercent <= 30 / 100.0, "25% should be within 30% threshold");
 
         // After applying factor, smallest interval becomes 100,000 µs = 1 redstone tick
         double adjusted = smallestInterval * requiredFactor;
@@ -312,18 +312,38 @@ class MIDIParsingTest {
     }
 
     @Test
-    @DisplayName("Slowdown should NOT apply when required slowdown exceeds threshold")
-    void testSlowdownExceedsThreshold() {
-        // Smallest interval = 50,000 µs → factor = 100,000/50,000 = 2.0 → 100% slowdown
-        // MAX_SLOWDOWN_PERCENT = 0.3 (30%) → should NOT apply
+    @DisplayName("BPM adaptation should NOT apply when change exceeds threshold")
+    void testAdaptExceedsThreshold() {
+        // Smallest interval = 50,000 µs → factor = 2.0 → 100% change
+        // MAX_CHANGE_PERCENT = 30 → should NOT apply
         double smallestInterval = 50_000;
         double microsPerRedstoneTick = 100_000.0;
         double requiredFactor = microsPerRedstoneTick / smallestInterval;
-        double slowdownPercent = requiredFactor - 1.0;
+        double changePercent = Math.abs(requiredFactor - 1.0);
 
         assertEquals(2.0, requiredFactor, 0.001, "Factor should be 2.0");
-        assertEquals(1.0, slowdownPercent, 0.001, "Slowdown should be 100%");
-        assertFalse(slowdownPercent <= 0.3, "100% should exceed 30% threshold");
+        assertEquals(1.0, changePercent, 0.001, "Change should be 100%");
+        assertFalse(changePercent <= 30 / 100.0, "100% should exceed 30% threshold");
+    }
+
+    @Test
+    @DisplayName("BPM adaptation should support speedup when interval exceeds 1 redstone tick")
+    void testAdaptSpeedup() {
+        // Smallest interval = 125,000 µs (> 100,000 µs) → needs speedup
+        // Required factor = 100,000 / 125,000 = 0.8 → 20% change
+        // MAX_CHANGE_PERCENT = 30 → should apply
+        double smallestInterval = 125_000;
+        double microsPerRedstoneTick = 100_000.0;
+        double requiredFactor = microsPerRedstoneTick / smallestInterval;
+        double changePercent = Math.abs(requiredFactor - 1.0);
+
+        assertEquals(0.8, requiredFactor, 0.001, "Factor should be 0.8");
+        assertEquals(0.2, changePercent, 0.001, "Change should be 20%");
+        assertTrue(requiredFactor < 1.0, "Factor < 1 means speedup");
+        assertTrue(changePercent <= 30 / 100.0, "20% should be within 30% threshold");
+
+        double adjusted = smallestInterval * requiredFactor;
+        assertEquals(100_000, adjusted, 0.01, "Adjusted interval should be exactly 1 redstone tick");
     }
 }
 

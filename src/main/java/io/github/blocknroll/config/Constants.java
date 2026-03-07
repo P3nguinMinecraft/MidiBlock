@@ -1,8 +1,9 @@
-package io.github.blocknroll;
+package io.github.blocknroll.config;
 
 import net.minecraft.SharedConstants;
 
 public class Constants {
+    public static final String OUTPUT_FOLDER = "schematics/";
     public static final String MID_EXTENSION = ".mid";
     public static final String SCHEM_EXTENSION = ".litematic";
     public static final int DATA_VERSION = SharedConstants.getCurrentVersion().dataVersion().version();

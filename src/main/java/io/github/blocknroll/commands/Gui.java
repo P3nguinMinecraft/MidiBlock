@@ -2,7 +2,7 @@ package io.github.blocknroll.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.blocknroll.gui.MidiDropScreen;
+import io.github.blocknroll.config.MidiDropScreen;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;

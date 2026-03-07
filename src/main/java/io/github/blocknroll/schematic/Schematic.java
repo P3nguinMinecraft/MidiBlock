@@ -1,7 +1,7 @@
 package io.github.blocknroll.schematic;
 
 import fi.dy.masa.litematica.schematic.container.LitematicaBlockStateContainer;
-import io.github.blocknroll.Constants;
+import io.github.blocknroll.config.Constants;
 import io.github.blocknroll.structure.Structure;
 import net.minecraft.nbt.*;
 

@@ -1,16 +1,14 @@
 package io.github.blocknroll.midi;
 
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-
 import java.util.Objects;
 
 public class Note {
     private int pitch; // 0 to 24
-    private int octave; // octave shift, leave 0 for now
-    private NoteBlockInstrument instrument;
+    private int octave; // octave shift
+    private Instrument instrument;
     private int tick;
 
-    public Note(int pitch, int octave, NoteBlockInstrument instrument, int tick) {
+    public Note(int pitch, int octave, Instrument instrument, int tick) {
         this.pitch = pitch;
         this.octave = octave;
         this.instrument = instrument;
@@ -25,7 +23,7 @@ public class Note {
         return octave;
     }
 
-    public NoteBlockInstrument getInstrument() {
+    public Instrument getInstrument() {
         return instrument;
     }
 

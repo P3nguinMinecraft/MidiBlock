@@ -1,20 +1,21 @@
 package io.github.blocknroll.structure;
 
 import io.github.blocknroll.BlockNRoll;
-import io.github.blocknroll.Config;
+import io.github.blocknroll.config.Config;
+import io.github.blocknroll.midi.Instrument;
 import io.github.blocknroll.midi.Note;
 import io.github.blocknroll.midi.Song;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Structure {
+    // ...existing code...
     private ArrayList<Block> blocks;
     private ArrayList<BlockPos> blockPos;
     private String name;
@@ -108,19 +109,19 @@ public class Structure {
     private void init(int middle) {
         add(new Block(
                 new BlockPos(middle, 1, 0),
-                Config.BUTTON.defaultBlockState()
+                Config.getButton().defaultBlockState()
                         .setValue(ButtonBlock.FACING, Direction.EAST)
                         .setValue(ButtonBlock.POWERED, false)
                         .setValue(ButtonBlock.FACE, AttachFace.FLOOR)
         ));
         add(new Block(
                 new BlockPos(middle, 0, 0),
-                Config.FLOOR.defaultBlockState()
+                Config.getFloor().defaultBlockState()
         ));
         for (int i = 0; i <= middle * 2; i++) {
             add(new Block(
                     new BlockPos(i, 0, 1),
-                    Config.FLOOR.defaultBlockState()
+                    Config.getFloor().defaultBlockState()
             ));
             add(new Block(
                     new BlockPos(i, 1, 1),
@@ -135,7 +136,7 @@ public class Structure {
             int z = i * 2 + startZ;
             add(new Block(
                     new BlockPos(x, 0, z),
-                    Config.FLOOR.defaultBlockState()
+                    Config.getFloor().defaultBlockState()
             ));
             add(new Block(
                     new BlockPos(x, 1, z),
@@ -147,25 +148,28 @@ public class Structure {
             ));
 
             if (note != null) {
+                Instrument inst = note.getInstrument();
+
                 add(new Block(
                         new BlockPos(x, 1, z + 1),
                         Blocks.NOTE_BLOCK.defaultBlockState()
-                                .setValue(NoteBlock.INSTRUMENT, note.getInstrument())
+                                .setValue(NoteBlock.INSTRUMENT, inst.getNoteBlockInstrument())
                                 .setValue(NoteBlock.POWERED, false)
                                 .setValue(NoteBlock.NOTE, note.getPitch())
                 ));
 
-                if (!note.getInstrument().equals(NoteBlockInstrument.HARP)) {
+                // Place the instrument's required block underneath (skip if AIR / harp)
+                if (inst != Instrument.HARP) {
                     add(new Block(
                             new BlockPos(x, 0, z + 1),
-                            Blocks.AIR.defaultBlockState() // TODO: map instrument -> block
+                            inst.getBlock()
                     ));
                 }
             }
             else {
                 add(new Block(
                         new BlockPos(x, 1, z + 1),
-                        Config.CONDUCTIVE.defaultBlockState()
+                        Config.getConductive().defaultBlockState()
                 ));
             }
         }
