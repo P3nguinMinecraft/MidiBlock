@@ -56,23 +56,30 @@ public class Song {
 
         ArrayList<Channel> channels = new ArrayList<>();
         int[] counts = getNoteCount();
+        int maxTick = counts.length;
+
+        ArrayList<Note>[] notesByTick = new ArrayList[counts.length];
+        for (int i = 0; i < counts.length; i++) {
+            notesByTick[i] = new ArrayList<>();
+        }
+        for (Note n : song) {
+            notesByTick[n.getTick()].add(n);
+        }
+
         int max = getMax(counts);
 
         while (max > 0) {
-            for (int tick = 0; tick < counts.length; tick++) {
-                if (counts[tick] == max) {
-                    Channel channel = new Channel(counts.length);
+            Channel channel = new Channel(maxTick);
 
-                    for (Note n : song) {
-                        if (n.getTick() == tick && counts[tick] > 0) {
-                            channel.addNote(n, n.getTick());
-                            counts[tick]--;
-                        }
-                    }
-                    channels.add(channel);
-                    break;
+            for (int tick = 0; tick < counts.length; tick++) {
+                if (counts[tick] > 0 && !notesByTick[tick].isEmpty()) {
+                    Note n = notesByTick[tick].remove(0);
+                    channel.addNote(n, tick);
+                    counts[tick]--;
                 }
             }
+
+            channels.add(channel);
             max = getMax(counts);
         }
         return channels;
