@@ -116,7 +116,7 @@ public class Structure {
                 new BlockPos(max / 2, 0, 0),
                 Config.getFloor().defaultBlockState()
         ));
-        for (int i = 0; i < max; i++) {
+        for (int i = 1; i <= max; i++) {
             add(new Block(
                     new BlockPos(i, 0, 1),
                     Config.getFloor().defaultBlockState()

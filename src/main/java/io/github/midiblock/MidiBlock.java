@@ -26,9 +26,9 @@ public class MidiBlock implements ClientModInitializer {
     public static void load(File file) {
         new Thread(() -> {
             String filename = file.getName().replaceFirst("\\.[^.]+$", "");
-            ChatUtils.sendChatMessage("Loading file " + filename + Constants.MID_EXTENSION);
+            ChatUtils.sendChatMessage("[MB] Loading file " + filename + Constants.MID_EXTENSION);
             if (!file.exists()) {
-                ChatUtils.sendChatMessage("File not found: " + filename + Constants.MID_EXTENSION);
+                ChatUtils.sendChatMessage("[MB] File not found: " + filename + Constants.MID_EXTENSION);
                 return;
             }
             long start = System.currentTimeMillis();
@@ -36,7 +36,7 @@ public class MidiBlock implements ClientModInitializer {
             Structure structure = new Structure(filename).fromSong(midi.song);
             Schematic.saveStructure(structure, new File(Constants.OUTPUT_FOLDER + filename + Constants.SCHEM_EXTENSION));
             io.github.midiblock.MidiBlock.LOGGER.info("Conversion completed in {}ms", System.currentTimeMillis() - start);
-            ChatUtils.sendChatMessage("Schematic saved to /schematic");
+            ChatUtils.sendChatMessage("[MB] Saved to /schematic folder");
         }).start();
     }
 }

@@ -36,7 +36,14 @@ public class ConfigScreen extends Screen {
         EditBox floorBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Floor Block"));
         floorBox.setMaxLength(64);
         floorBox.setValue(Config.FLOOR_ID);
-        floorBox.setResponder(val -> Config.FLOOR_ID = val);
+        floorBox.setResponder(val -> {
+            if (Config.isValidBlockId(val)) {
+                Config.FLOOR_ID = val;
+                floorBox.setTextColor(0xFFFFFFFF);
+            } else {
+                floorBox.setTextColor(0xFFFF5555);
+            }
+        });
         this.addRenderableWidget(floorBox);
 
         y += labelGap + 22;
@@ -44,7 +51,14 @@ public class ConfigScreen extends Screen {
         EditBox conductiveBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Conductive Block"));
         conductiveBox.setMaxLength(64);
         conductiveBox.setValue(Config.CONDUCTIVE_ID);
-        conductiveBox.setResponder(val -> Config.CONDUCTIVE_ID = val);
+        conductiveBox.setResponder(val -> {
+            if (Config.isValidBlockId(val)) {
+                Config.CONDUCTIVE_ID = val;
+                conductiveBox.setTextColor(0xFFFFFFFF);
+            } else {
+                conductiveBox.setTextColor(0xFFFF5555);
+            }
+        });
         this.addRenderableWidget(conductiveBox);
 
         y += labelGap + 22;
@@ -52,7 +66,14 @@ public class ConfigScreen extends Screen {
         EditBox buttonBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Button Block"));
         buttonBox.setMaxLength(64);
         buttonBox.setValue(Config.BUTTON_ID);
-        buttonBox.setResponder(val -> Config.BUTTON_ID = val);
+        buttonBox.setResponder(val -> {
+            if (Config.isValidBlockId(val)) {
+                Config.BUTTON_ID = val;
+                buttonBox.setTextColor(0xFFFFFFFF);
+            } else {
+                buttonBox.setTextColor(0xFFFF5555);
+            }
+        });
         this.addRenderableWidget(buttonBox);
 
         y = 40;
@@ -109,44 +130,44 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         int centerX = this.width / 2;
         int widgetWidth = 200;
         int leftCol = centerX - widgetWidth - 4;
         int rightCol = centerX + 4;
+        int labelGap = 12;
+
+        guiGraphics.vLine(this.width / 2, 15, this.height - 50, 0x20FFFFFF);
 
         guiGraphics.drawCenteredString(
                 this.font,
                 Component.literal("MidiBlock").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD),
-                centerX, 10, 0xFFFFFF
+                centerX, 10, 0xFFFFFFFF
         );
 
-        int y = 40;
-        int labelGap = 12;
-        guiGraphics.drawString(this.font, Component.literal("Floor Block").withStyle(ChatFormatting.GRAY), leftCol, y, 0xFFFFFF);
-        y += labelGap + 22;
-        guiGraphics.drawString(this.font, Component.literal("Conductive Block").withStyle(ChatFormatting.GRAY), leftCol, y, 0xFFFFFF);
-        y += labelGap + 22;
-        guiGraphics.drawString(this.font, Component.literal("Button Block").withStyle(ChatFormatting.GRAY), leftCol, y, 0xFFFFFF);
+        final int floorLabelY = 40;
+        final int conductiveLabelY = floorLabelY + labelGap + 22;
+        final int buttonLabelY = conductiveLabelY + labelGap + 22;
 
-        guiGraphics.fill(centerX - 1, 30, centerX, this.height - 40, 0x40FFFFFF);
+        guiGraphics.drawString(this.font, Component.literal("Floor Block").withStyle(ChatFormatting.GRAY), leftCol, floorLabelY, 0xFFFFFFFF);
+        guiGraphics.drawString(this.font, Component.literal("Conductive Block").withStyle(ChatFormatting.GRAY), leftCol, conductiveLabelY, 0xFFFFFFFF);
+        guiGraphics.drawString(this.font, Component.literal("Button Block").withStyle(ChatFormatting.GRAY), leftCol, buttonLabelY, 0xFFFFFFFF);
 
-        guiGraphics.drawString(this.font, Component.literal("Settings").withStyle(ChatFormatting.GRAY), rightCol, 30, 0xFFFFFF);
+
+        guiGraphics.drawString(this.font, Component.literal("Settings").withStyle(ChatFormatting.GRAY), rightCol, 30, 0xFFFFFFFF);
+
 
         guiGraphics.drawCenteredString(
                 this.font,
                 Component.literal("Drag & Drop your .mid file here!").withStyle(ChatFormatting.AQUA),
-                centerX, this.height - 50, 0xFFFFFF
+                centerX, this.height - 50, 0xFFFFFFFF
         );
     }
 
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.minecraft.level == null) {
-            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        } else {
-            guiGraphics.fill(0, 0, this.width, this.height, 0x90202020);
-        }
+        guiGraphics.fill(0, 0, this.width, this.height, 0x90202020);
     }
 
     @Override

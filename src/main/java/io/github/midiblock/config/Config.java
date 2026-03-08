@@ -27,6 +27,16 @@ public class Config {
         return resolveBlock(BUTTON_ID, Blocks.OAK_BUTTON);
     }
 
+    public static boolean isValidBlockId(String id) {
+        try {
+            Identifier loc = Identifier.parse(id);
+            Block block = BuiltInRegistries.BLOCK.getValue(loc);
+            return block != Blocks.AIR;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static Block resolveBlock(String id, Block fallback) {
         try {
             Identifier loc = Identifier.parse(id);
