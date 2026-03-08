@@ -1,5 +1,6 @@
 package io.github.midiblock;
 
+import io.github.midiblock.config.Config;
 import io.github.midiblock.config.Constants;
 import io.github.midiblock.midi.MIDI;
 import io.github.midiblock.schematic.Schematic;
@@ -16,6 +17,7 @@ public class MidiBlock implements ClientModInitializer {
 	public static Logger LOGGER = LoggerFactory.getLogger("MidiBlock");
     @Override
     public void onInitializeClient() {
+        Config.load();
         ClientCommandRegistrationCallback.EVENT.register(Command::register);
     }
 

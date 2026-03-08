@@ -171,6 +171,12 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
+    public void onClose() {
+        Config.save();
+        super.onClose();
+    }
+
+    @Override
     public void onFilesDrop(List<Path> paths) {
         for (Path path : paths) {
             File file = path.toFile();
