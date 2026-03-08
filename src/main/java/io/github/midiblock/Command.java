@@ -1,8 +1,8 @@
-package io.github.blocknroll;
+package io.github.midiblock;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.blocknroll.commands.Load;
-import io.github.blocknroll.commands.Gui; // Import the new class
+import io.github.midiblock.commands.Load;
+import io.github.midiblock.commands.Gui; // Import the new class
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 

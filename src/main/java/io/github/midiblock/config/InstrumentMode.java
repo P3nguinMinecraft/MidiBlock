@@ -1,8 +1,8 @@
-package io.github.blocknroll.config;
+package io.github.midiblock.config;
 
 public enum InstrumentMode {
     NONE("None"),
-    INSTRUMENT("Instrument"),
+    MIDI("From MIDI"),
     PITCH("Pitch");
 
     private final String displayName;

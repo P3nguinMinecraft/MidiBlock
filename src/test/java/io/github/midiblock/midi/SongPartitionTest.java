@@ -1,6 +1,6 @@
-package io.github.blocknroll.midi;
+package io.github.midiblock.midi;
 
-import io.github.blocknroll.structure.Channel;
+import io.github.midiblock.structure.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(1, channels.size(), "Single note should produce 1 channel");
 
-        Channel channel = channels.get(0);
+        Channel channel = channels.getFirst();
         assertEquals(1, channel.getLength(), "Channel should have length 1");
         assertNotNull(channel.getNote(0), "Note should be present at tick 0");
     }
@@ -49,7 +49,7 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(1, channels.size(), "Notes at different ticks should produce 1 channel");
 
-        Channel channel = channels.get(0);
+        Channel channel = channels.getFirst();
         assertEquals(6, channel.getLength(), "Channel should span from tick 0 to 5");
         assertNotNull(channel.getNote(0), "Note should be at tick 0");
         assertNotNull(channel.getNote(2), "Note should be at tick 2");
@@ -154,7 +154,7 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(1, channels.size(), "Two notes at different ticks should produce 1 channel");
 
-        Channel channel = channels.get(0);
+        Channel channel = channels.getFirst();
         assertEquals(101, channel.getLength(), "Channel should span from tick 0 to 100");
     }
 
@@ -194,7 +194,7 @@ class SongPartitionTest {
         ArrayList<Channel> channels = song.partition();
         assertEquals(1, channels.size(), "Non-concurrent notes should produce 1 channel");
 
-        Channel channel = channels.get(0);
+        Channel channel = channels.getFirst();
         assertEquals(3, channel.getLength(), "Channel length should be 3");
         assertEquals(3, countNonNullNotes(channel), "Should contain all 3 notes");
     }

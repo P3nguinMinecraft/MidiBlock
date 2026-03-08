@@ -1,8 +1,8 @@
-package io.github.blocknroll.schematic;
+package io.github.midiblock.schematic;
 
 import fi.dy.masa.litematica.schematic.container.LitematicaBlockStateContainer;
-import io.github.blocknroll.config.Constants;
-import io.github.blocknroll.structure.Structure;
+import io.github.midiblock.config.Constants;
+import io.github.midiblock.structure.Structure;
 import net.minecraft.nbt.*;
 
 import java.io.*;

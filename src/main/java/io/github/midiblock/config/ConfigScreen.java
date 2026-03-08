@@ -1,7 +1,7 @@
-package io.github.blocknroll.config;
+package io.github.midiblock.config;
 
-import io.github.blocknroll.BlockNRoll;
-import io.github.blocknroll.ChatUtils;
+import io.github.midiblock.ChatUtils;
+import io.github.midiblock.MidiBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -15,14 +15,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
-public class MidiDropScreen extends Screen {
+public class ConfigScreen extends Screen {
 
-    private EditBox floorBox;
-    private EditBox conductiveBox;
-    private EditBox buttonBox;
-
-    public MidiDropScreen(Screen parent) {
-        super(Component.literal("Block N Roll"));
+    public ConfigScreen(Screen parent) {
+        super(Component.literal("MidiBlock Config"));
     }
 
     @Override
@@ -34,12 +30,10 @@ public class MidiDropScreen extends Screen {
         int leftCol = centerX - widgetWidth - 4;
         int rightCol = centerX + 4;
 
-        // ---- Left column: Block config ----
         int y = 40;
         int labelGap = 12;
 
-        // Floor block
-        floorBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Floor Block"));
+        EditBox floorBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Floor Block"));
         floorBox.setMaxLength(64);
         floorBox.setValue(Config.FLOOR_ID);
         floorBox.setResponder(val -> Config.FLOOR_ID = val);
@@ -47,8 +41,7 @@ public class MidiDropScreen extends Screen {
 
         y += labelGap + 22;
 
-        // Conductive block
-        conductiveBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Conductive Block"));
+        EditBox conductiveBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Conductive Block"));
         conductiveBox.setMaxLength(64);
         conductiveBox.setValue(Config.CONDUCTIVE_ID);
         conductiveBox.setResponder(val -> Config.CONDUCTIVE_ID = val);
@@ -56,17 +49,14 @@ public class MidiDropScreen extends Screen {
 
         y += labelGap + 22;
 
-        // Button block
-        buttonBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Button Block"));
+        EditBox buttonBox = new EditBox(this.font, leftCol, y + labelGap, widgetWidth, 18, Component.literal("Button Block"));
         buttonBox.setMaxLength(64);
         buttonBox.setValue(Config.BUTTON_ID);
         buttonBox.setResponder(val -> Config.BUTTON_ID = val);
         this.addRenderableWidget(buttonBox);
 
-        // ---- Right column: Settings ----
         y = 40;
 
-        // Adapt BPM toggle
         this.addRenderableWidget(Button.builder(getAdaptBpmLabel(), (button) -> {
                     Config.ADAPT_BPM = !Config.ADAPT_BPM;
                     button.setMessage(getAdaptBpmLabel());
@@ -96,7 +86,6 @@ public class MidiDropScreen extends Screen {
 
         y += 24;
 
-        // Instrument mode toggle
         this.addRenderableWidget(Button.builder(getInstrumentModeLabel(), (button) -> {
                     Config.INSTRUMENT_MODE = Config.INSTRUMENT_MODE.next();
                     button.setMessage(getInstrumentModeLabel());
@@ -104,7 +93,6 @@ public class MidiDropScreen extends Screen {
                 .bounds(rightCol, y, widgetWidth, 20)
                 .build());
 
-        // ---- Bottom: drop zone text + close button ----
         this.addRenderableWidget(Button.builder(Component.literal("Close"), (button) ->
                         this.minecraft.setScreen(null))
                 .bounds(centerX - widgetWidth / 2, this.height - 28, widgetWidth, 20)
@@ -121,21 +109,18 @@ public class MidiDropScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         int centerX = this.width / 2;
         int widgetWidth = 200;
         int leftCol = centerX - widgetWidth - 4;
         int rightCol = centerX + 4;
 
-        // Title
         guiGraphics.drawCenteredString(
                 this.font,
-                Component.literal("Block N Roll").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD),
+                Component.literal("MidiBlock").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD),
                 centerX, 10, 0xFFFFFF
         );
 
-        // Left column labels
         int y = 40;
         int labelGap = 12;
         guiGraphics.drawString(this.font, Component.literal("Floor Block").withStyle(ChatFormatting.GRAY), leftCol, y, 0xFFFFFF);
@@ -144,13 +129,10 @@ public class MidiDropScreen extends Screen {
         y += labelGap + 22;
         guiGraphics.drawString(this.font, Component.literal("Button Block").withStyle(ChatFormatting.GRAY), leftCol, y, 0xFFFFFF);
 
-        // Column divider
         guiGraphics.fill(centerX - 1, 30, centerX, this.height - 40, 0x40FFFFFF);
 
-        // Right column header
         guiGraphics.drawString(this.font, Component.literal("Settings").withStyle(ChatFormatting.GRAY), rightCol, 30, 0xFFFFFF);
 
-        // Drop zone prompt
         guiGraphics.drawCenteredString(
                 this.font,
                 Component.literal("Drag & Drop your .mid file here!").withStyle(ChatFormatting.AQUA),
@@ -174,7 +156,7 @@ public class MidiDropScreen extends Screen {
             String filename = file.getName().toLowerCase();
 
             if (filename.endsWith(".mid")) {
-                BlockNRoll.load(file);
+                MidiBlock.load(file);
                 this.minecraft.setScreen(null);
                 return;
             }

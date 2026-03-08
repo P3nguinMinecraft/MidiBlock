@@ -1,4 +1,4 @@
-package io.github.blocknroll.config;
+package io.github.midiblock.config;
 
 import net.minecraft.SharedConstants;
 

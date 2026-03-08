@@ -1,10 +1,9 @@
-package io.github.blocknroll.structure;
+package io.github.midiblock.structure;
 
-import io.github.blocknroll.BlockNRoll;
-import io.github.blocknroll.config.Config;
-import io.github.blocknroll.midi.Instrument;
-import io.github.blocknroll.midi.Note;
-import io.github.blocknroll.midi.Song;
+import io.github.midiblock.config.Config;
+import io.github.midiblock.midi.Instrument;
+import io.github.midiblock.midi.Note;
+import io.github.midiblock.midi.Song;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
@@ -175,24 +174,15 @@ public class Structure {
     }
 
     public Structure fromSong(Song song) {
-        long start = System.currentTimeMillis();
         int max = song.getMaxConcurrent();
-        BlockNRoll.LOGGER.info("Song size: {}", song.getNotes().size());
-        BlockNRoll.LOGGER.info("Max tick: {}", song.getNoteCount().length);
-
-        BlockNRoll.LOGGER.info("Starting structure: {}ms", System.currentTimeMillis() - start);
         init(max - 1);
-        BlockNRoll.LOGGER.info("Init: {}ms", System.currentTimeMillis() - start);
         ArrayList<Channel> parts = song.partition();
-        BlockNRoll.LOGGER.info("Partitioned: {}ms", System.currentTimeMillis() - start);
         int x = 0;
         if (parts.size() < 2) x++;
         for (Channel channel : parts) {
             buildPart(channel, x, 2);
             x++;
         }
-        BlockNRoll.LOGGER.info("Build done: {}ms", System.currentTimeMillis() - start);
-
         return this;
     }
 }

@@ -1,4 +1,4 @@
-package io.github.blocknroll.midi;
+package io.github.midiblock.midi;
 
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;

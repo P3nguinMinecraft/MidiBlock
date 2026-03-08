@@ -1,29 +1,33 @@
 {
 	"schemaVersion": 1,
-	"id": "blocknroll",
+	"id": "midiblock",
 	"version": "${version}",
-	"name": "Block N Roll",
+	"name": "MidiBlock",
 	"description": "A mod that converts MIDI files to Note Block machine schematics.",
 	"authors": [
+        "P3nguinMinecraft",
+        "MrPlankton",
+        "Ish",
+        "ColdCoffee1"
 		],
 	"contact": {
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/blocknroll/icon.png",
+	"icon": "assets/midiblock/icon.png",
 	"environment": "*",
 	"entrypoints": {
         "main": [
 
         ],
 		"client": [
-            "io.github.blocknroll.BlockNRoll"
+            "io.github.midiblock.MidiBlock"
 		],
         "modmenu": [
-            "io.github.blocknroll.compat.ModMenuImpl"
+            "io.github.midiblock.compat.ModMenuImpl"
         ]
 	},
 	"mixins": [
-        "blocknroll.mixins.json"
+        "midiblock.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
@@ -34,5 +38,5 @@
 	"suggests": {
 		"another-mod": "*"
 	},
-	"accessWidener" : "blocknroll.accesswidener"
+	"accessWidener" : "midiblock.accesswidener"
 }

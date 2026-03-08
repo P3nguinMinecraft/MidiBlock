@@ -1,6 +1,6 @@
-package io.github.blocknroll.midi;
+package io.github.midiblock.midi;
 
-import io.github.blocknroll.structure.Channel;
+import io.github.midiblock.structure.Channel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,12 +54,12 @@ public class Song {
         int[] counts = getNoteCount();
         int maxTick = counts.length;
 
-        ArrayList<Note>[] notesByTick = new ArrayList[counts.length];
+        ArrayList<ArrayList<Note>> notesByTick = new ArrayList<>();
         for (int i = 0; i < counts.length; i++) {
-            notesByTick[i] = new ArrayList<>();
+            notesByTick.add(new ArrayList<>());
         }
         for (Note n : song) {
-            notesByTick[n.getTick()].add(n);
+            notesByTick.get(n.getTick()).add(n);
         }
 
         int max = getMax(counts);
@@ -68,8 +68,8 @@ public class Song {
             Channel channel = new Channel(maxTick);
 
             for (int tick = 0; tick < counts.length; tick++) {
-                if (counts[tick] > 0 && !notesByTick[tick].isEmpty()) {
-                    Note n = notesByTick[tick].removeFirst();
+                if (counts[tick] > 0 && !notesByTick.get(tick).isEmpty()) {
+                    Note n = notesByTick.get(tick).removeFirst();
                     channel.addNote(n, tick);
                     counts[tick]--;
                 }

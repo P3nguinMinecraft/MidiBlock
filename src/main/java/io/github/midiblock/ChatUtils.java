@@ -1,4 +1,4 @@
-package io.github.blocknroll;
+package io.github.midiblock;
 
 import 	net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

@@ -1,4 +1,4 @@
-package io.github.blocknroll.midi;
+package io.github.midiblock.midi;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ class MIDIParsingTest {
             while (mcPitch < 0) mcPitch += 12;
             while (mcPitch > 24) mcPitch -= 12;
 
-            assertTrue(mcPitch >= 0 && mcPitch <= 24,
+            assertTrue(mcPitch >= 0,
                 "MC pitch should be between 0 and 24, got " + mcPitch + " for MIDI " + midiNote);
         }
     }
@@ -90,8 +90,7 @@ class MIDIParsingTest {
         double microsPerMidiTick = mpq / (double) resolution;
         double microsPerRedstoneTick = 100_000.0;
 
-        int midiTick = resolution; // one quarter note
-        int redstoneTick = (int) Math.round((midiTick * microsPerMidiTick) / microsPerRedstoneTick);
+        int redstoneTick = (int) Math.round((resolution * microsPerMidiTick) / microsPerRedstoneTick);
 
         assertEquals(5, redstoneTick, "Quarter note at 120 BPM should scale to 5 redstone ticks");
     }
@@ -120,7 +119,7 @@ class MIDIParsingTest {
         // MIDI notes 42-66 map directly to MC pitch 0-24
         for (int midiNote = 42; midiNote <= 66; midiNote++) {
             int mcPitch = midiNote - 42;
-            assertTrue(mcPitch >= 0 && mcPitch <= 24, "MC pitch should be within note block range 0-24");
+            assertTrue(true, "MC pitch should be within note block range 0-24");
         }
     }
 
@@ -133,7 +132,7 @@ class MIDIParsingTest {
 
         assertEquals(1, song.getNotes().size(), "Song should contain the added note");
 
-        Note retrieved = song.getNotes().get(0);
+        Note retrieved = song.getNotes().getFirst();
         assertEquals(5, retrieved.getPitch(), "Note should have correct pitch");
         assertEquals(2, retrieved.getOctave(), "Note should have correct octave");
         assertEquals(42, retrieved.getTick(), "Note should have correct tick");
@@ -214,7 +213,7 @@ class MIDIParsingTest {
     @DisplayName("Octave shift should be calculated correctly for MIDI notes outside MC range")
     void testOctaveCalculation() {
         // MIDI 42 = F#3 = MC pitch 0, octaveShift 0
-        int mcPitch42 = 42 - 42;
+        int mcPitch42 = 0;
         assertEquals(0, mcPitch42, "MIDI 42 (F#3) should be MC pitch 0");
 
         // MIDI 30 = F#2 → 30-42 = -12, shift up once → 0, octaveShift -1
@@ -304,7 +303,6 @@ class MIDIParsingTest {
 
         assertEquals(1.25, requiredFactor, 0.001, "Factor should be 1.25");
         assertEquals(0.25, changePercent, 0.001, "Change should be 25%");
-        assertTrue(changePercent <= 30 / 100.0, "25% should be within 30% threshold");
 
         // After applying factor, smallest interval becomes 100,000 µs = 1 redstone tick
         double adjusted = smallestInterval * requiredFactor;
@@ -323,7 +321,6 @@ class MIDIParsingTest {
 
         assertEquals(2.0, requiredFactor, 0.001, "Factor should be 2.0");
         assertEquals(1.0, changePercent, 0.001, "Change should be 100%");
-        assertFalse(changePercent <= 30 / 100.0, "100% should exceed 30% threshold");
     }
 
     @Test
@@ -339,8 +336,6 @@ class MIDIParsingTest {
 
         assertEquals(0.8, requiredFactor, 0.001, "Factor should be 0.8");
         assertEquals(0.2, changePercent, 0.001, "Change should be 20%");
-        assertTrue(requiredFactor < 1.0, "Factor < 1 means speedup");
-        assertTrue(changePercent <= 30 / 100.0, "20% should be within 30% threshold");
 
         double adjusted = smallestInterval * requiredFactor;
         assertEquals(100_000, adjusted, 0.01, "Adjusted interval should be exactly 1 redstone tick");

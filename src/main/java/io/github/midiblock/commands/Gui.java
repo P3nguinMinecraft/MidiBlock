@@ -1,8 +1,8 @@
-package io.github.blocknroll.commands;
+package io.github.midiblock.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.blocknroll.config.MidiDropScreen;
+import io.github.midiblock.config.ConfigScreen;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
@@ -15,12 +15,12 @@ public class Gui {
         var command = ClientCommandManager.literal("gui")
             .executes(context -> {
                 Minecraft.getInstance().execute(() -> {
-                    Minecraft.getInstance().setScreen(new MidiDropScreen(Minecraft.getInstance().screen));
+                    Minecraft.getInstance().setScreen(new ConfigScreen(Minecraft.getInstance().screen));
                 });
                 return Command.SINGLE_SUCCESS;
             });
 
-        dispatcher.register(ClientCommandManager.literal("blocknroll").then(command));
-        dispatcher.register(ClientCommandManager.literal("br").then(command));
+        dispatcher.register(ClientCommandManager.literal("midiblock").then(command));
+        dispatcher.register(ClientCommandManager.literal("mb").then(command));
     }
 }

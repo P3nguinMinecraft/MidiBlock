@@ -1,9 +1,9 @@
-package io.github.blocknroll;
+package io.github.midiblock;
 
-import io.github.blocknroll.config.Constants;
-import io.github.blocknroll.midi.MIDI;
-import io.github.blocknroll.schematic.Schematic;
-import io.github.blocknroll.structure.Structure;
+import io.github.midiblock.config.Constants;
+import io.github.midiblock.midi.MIDI;
+import io.github.midiblock.schematic.Schematic;
+import io.github.midiblock.structure.Structure;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import org.slf4j.Logger;
@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 
-public class BlockNRoll implements ClientModInitializer {
-	public static Logger LOGGER = LoggerFactory.getLogger("BlockNRoll");
+public class MidiBlock implements ClientModInitializer {
+	public static Logger LOGGER = LoggerFactory.getLogger("MidiBlock");
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register(Command::register);
@@ -32,14 +32,11 @@ public class BlockNRoll implements ClientModInitializer {
                 return;
             }
             long start = System.currentTimeMillis();
-            BlockNRoll.LOGGER.info("Starting: {}ms", System.currentTimeMillis() - start);
             MIDI midi = new MIDI().fromFile(file);
-            BlockNRoll.LOGGER.info("Loaded from MIDI: {}ms", System.currentTimeMillis() - start);
             Structure structure = new Structure(filename).fromSong(midi.song);
-            BlockNRoll.LOGGER.info("Built Structure: {}ms", System.currentTimeMillis() - start);
             Schematic.saveStructure(structure, new File(Constants.OUTPUT_FOLDER + filename + Constants.SCHEM_EXTENSION));
-            BlockNRoll.LOGGER.info("Saved Schematic: {}ms", System.currentTimeMillis() - start);
-            ChatUtils.sendChatMessage("Done!");
+            io.github.midiblock.MidiBlock.LOGGER.info("Conversion completed in {}ms", System.currentTimeMillis() - start);
+            ChatUtils.sendChatMessage("Schematic saved to /schematic");
         }).start();
     }
 }

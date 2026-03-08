@@ -1,6 +1,6 @@
-package io.github.blocknroll.structure;
+package io.github.midiblock.structure;
 
-import io.github.blocknroll.midi.Note;
+import io.github.midiblock.midi.Note;
 
 public class Channel {
     private Note[] notes;

@@ -1,7 +1,4 @@
-package io.github.blocknroll.structure;
-
-import java.util.HashMap;
-import java.util.Map;
+package io.github.midiblock.structure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
