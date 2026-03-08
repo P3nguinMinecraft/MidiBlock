@@ -28,4 +28,4 @@ Opens the Config GUI, where you can also drag `.mid` files from ANYWHERE on your
 Bundles `ModMenu`, `Litematica` (and its dependencies)
 
 ## Credits
-P3nguinMinecraft, MrPlankton611, Ish, ColdCoffee1
+P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
