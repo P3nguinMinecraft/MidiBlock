@@ -1,0 +1,31 @@
+# MidiBlock
+Minecraft mod that converts midi files `.mid` into schematic files `.litematic`
+
+**Fabric 1.21.11**
+
+Get this mod on [Modrinth](https://modrinth.com/mod/midiblock)! 
+
+## Usage
+The schematic file is saved to `/schematics` folder with the same filename
+
+It is recommended to use [Litematica](https://modrinth.com/mod/litematica) to paste or place the blueprint of the generated noteblock machine
+
+#### Base Command
+##### `/midiblock` - alias `/mb`
+
+#### Subcommands
+##### `/mb load {filedirectory}`
+Loads and converts the midi file to schematic
+
+Use the directory of the `.mid` file and its name **from the .minecraft folder**
+
+Examples: `/mb load input/music` `/mb load song`
+
+##### `/mb gui`
+Opens the Config GUI, where you can also drag `.mid` files from ANYWHERE on your computer
+
+## Dependencies
+Bundles `ModMenu`, `Litematica` (and its dependencies)
+
+## Credits
+P3nguinMinecraft, MrPlankton611, Ish, ColdCoffee1
