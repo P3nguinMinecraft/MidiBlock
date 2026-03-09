@@ -33,6 +33,6 @@ Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://
 P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
 
 # Versions
-|Minecraft|MidiBlock|Dependencies|
-|-|-|-|
-|1.21.11|[1.0.0+1.21.11](https://github.com/P3nguinMinecraft/MidiBlock/releases/download/1.0.0%2B1.21.11/midiblock-1.0.0+1.21.11.jar)|[Fabric 0.18.4+](https://fabricmc.net/use/)|
+|Minecraft|MidiBlock|
+|-|-|
+|1.21.11|[1.0.0+1.21.11](https://github.com/P3nguinMinecraft/MidiBlock/releases/download/1.0.0%2B1.21.11/midiblock-1.0.0+1.21.11.jar)|
