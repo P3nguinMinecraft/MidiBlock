@@ -25,7 +25,15 @@ Examples: `/mb load input/music` `/mb load song`
 Opens the Config GUI, where you can also drag `.mid` files from ANYWHERE on your computer
 
 ## Dependencies
-Bundles `ModMenu`, `Litematica` (and its dependencies)
+Requires [FabricAPI](https://modrinth.com/mod/fabric-api)
+
+Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://modrinth.com/mod/litematica), [MaLiLib](https://modrinth.com/mod/malilib), ConditionalMixin
+
+# Versions
+|Minecraft|MidiBlock|
+|-|-|
+|1.21.11|[1.0.0+1.21.11](https://cdn.modrinth.com/data/dTxPOUdB/versions/xU6Sayaa/midiblock-1.0.0%2B1.21.11.jar)|
+
 
 ## Credits
 P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
