@@ -32,7 +32,7 @@ Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://
 # Versions
 |Minecraft|MidiBlock|
 |-|-|
-|1.21.11|[1.0.0+1.21.11](https://github.com/P3nguinMinecraft/MidiBlock/releases/download/1.0.0%2B1.21.11/midiblock-1.0.0+1.21.11.jar)|
+|1.21.11|[1.0.0+1.21.11](https://cdn.modrinth.com/data/dTxPOUdB/versions/xU6Sayaa/midiblock-1.0.0%2B1.21.11.jar)|
 
 
 ## Credits
