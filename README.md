@@ -29,10 +29,11 @@ Requires [FabricAPI](https://modrinth.com/mod/fabric-api)
 
 Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://modrinth.com/mod/litematica), [MaLiLib](https://modrinth.com/mod/malilib), ConditionalMixin
 
-## Credits
-P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
-
 # Versions
 |Minecraft|MidiBlock|
 |-|-|
 |1.21.11|[1.0.0+1.21.11](https://github.com/P3nguinMinecraft/MidiBlock/releases/download/1.0.0%2B1.21.11/midiblock-1.0.0+1.21.11.jar)|
+
+
+## Credits
+P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
