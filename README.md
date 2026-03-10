@@ -27,8 +27,6 @@ Opens the Config GUI, where you can also drag `.mid` files from ANYWHERE on your
 ## Dependencies
 Requires [FabricAPI](https://modrinth.com/mod/fabric-api)
 
-Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://modrinth.com/mod/litematica), [MaLiLib](https://modrinth.com/mod/malilib), ConditionalMixin
-
 # Versions
 |Minecraft|MidiBlock|
 |-|-|
@@ -37,3 +35,5 @@ Compiles with [ModMenu](https://modrinth.com/mod/modmenu), [Litematica](https://
 
 ## Credits
 P3nguinMinecraft, MrPlankton611, MansWUT, ColdCoffee1
+
+Uses code from [Litematica](https://modrinth.com/mod/litematica) for exporting schematics!
