@@ -25,7 +25,7 @@ Examples: `/mb load input/music` `/mb load song`
 Opens the Config GUI, where you can also drag `.mid` files from ANYWHERE on your computer
 
 ## Dependencies
-Requires [FabricAPI](https://modrinth.com/mod/fabric-api)
+Requires [Fabric API](https://modrinth.com/mod/fabric-api)
 
 # Versions
 |Minecraft|MidiBlock|
