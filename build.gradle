@@ -41,10 +41,6 @@ dependencies {
 
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation("com.github.sakura-ryoko:malilib:${project.malilib_version}")
-    modImplementation("com.github.sakura-ryoko:litematica:${project.litematica_version}")
-    include(implementation("me.fallenbreath:conditional-mixin-fabric:${project.conditionalmixin_version}"))
-
     mappings loom.officialMojangMappings()
 
     // Tests

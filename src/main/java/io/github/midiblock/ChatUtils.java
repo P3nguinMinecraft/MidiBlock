@@ -6,6 +6,6 @@ import net.minecraft.network.chat.Component;
 public class ChatUtils {
     public static void sendChatMessage(String message) {
         Minecraft client = Minecraft.getInstance();
-        client.gui.getChat().addMessage(Component.literal(message));
+        client.execute(() -> client.gui.getChat().addMessage(Component.literal(message)));
     }
 }
