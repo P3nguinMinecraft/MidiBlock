@@ -105,15 +105,20 @@ public class Structure {
     }
 
     private void init(int max) {
+        int firstRepeater = 1;
+        int lastRepeater = (max % 2 == 1) ? max : max - 1;
+        int buttonX = (firstRepeater + lastRepeater) / 2;
+        if (buttonX % 2 == 0) buttonX++;
+
         add(new Block(
-                new BlockPos(max / 2, 1, 0),
+                new BlockPos(buttonX, 1, 0),
                 Config.getButton().defaultBlockState()
                         .setValue(ButtonBlock.FACING, Direction.EAST)
                         .setValue(ButtonBlock.POWERED, false)
                         .setValue(ButtonBlock.FACE, AttachFace.FLOOR)
         ));
         add(new Block(
-                new BlockPos(max / 2, 0, 0),
+                new BlockPos(buttonX, 0, 0),
                 Config.getFloor().defaultBlockState()
         ));
         for (int i = 1; i <= max; i++) {

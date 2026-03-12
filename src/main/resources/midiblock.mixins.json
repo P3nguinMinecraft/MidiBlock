@@ -3,10 +3,12 @@
     "package": "io.github.midiblock.mixin",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-
     ],
     "injectors": {
         "defaultRequire": 1
     },
-    "verbose": true
+    "verbose": true,
+    "client": [
+        "ChatComponentMixin"
+    ]
 }

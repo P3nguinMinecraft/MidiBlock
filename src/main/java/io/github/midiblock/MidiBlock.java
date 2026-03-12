@@ -15,6 +15,7 @@ import java.io.File;
 
 public class MidiBlock implements ClientModInitializer {
 	public static Logger LOGGER = LoggerFactory.getLogger("MidiBlock");
+    public static String NAME = "MidiBlock";
     @Override
     public void onInitializeClient() {
         Config.load();
@@ -28,17 +29,29 @@ public class MidiBlock implements ClientModInitializer {
     public static void load(File file) {
         new Thread(() -> {
             String filename = file.getName().replaceFirst("\\.[^.]+$", "");
-            ChatUtils.sendChatMessage("[MB] Loading file " + filename + Constants.MID_EXTENSION);
+
+            ChatUtils.sendInfo("Loading " + filename + Constants.MID_EXTENSION + "...");
+            ChatUtils.sendProgressBar("Converting", 0.0);
+
             if (!file.exists()) {
-                ChatUtils.sendChatMessage("[MB] File not found: " + filename + Constants.MID_EXTENSION);
+                ChatUtils.sendError("File not found: " + filename + Constants.MID_EXTENSION);
+                ChatUtils.removeProgressBar();
                 return;
             }
+
             long start = System.currentTimeMillis();
+
+            ChatUtils.sendProgressBar("Parsing MIDI", 0.15);
             MIDI midi = new MIDI().fromFile(file);
+            ChatUtils.sendProgressBar("Building Structure", 0.50);
             Structure structure = new Structure(filename).fromSong(midi.song);
+            ChatUtils.sendProgressBar("Saving Schematic", 0.90);
             Schematic.saveStructure(structure, new File(Constants.OUTPUT_FOLDER + filename + Constants.SCHEM_EXTENSION));
-            io.github.midiblock.MidiBlock.LOGGER.info("Conversion completed in {}ms", System.currentTimeMillis() - start);
-            ChatUtils.sendChatMessage("[MB] Saved to /schematic folder");
+            ChatUtils.sendProgressBar("Complete", 1.0);
+            long elapsed = System.currentTimeMillis() - start;
+            MidiBlock.LOGGER.info("Conversion completed in {}ms", elapsed);
+            ChatUtils.removeProgressBar();
+            ChatUtils.sendSuccess("Saved to /schematics folder (" + elapsed + "ms)");
         }).start();
     }
 }

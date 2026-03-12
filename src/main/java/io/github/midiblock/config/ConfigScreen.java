@@ -188,6 +188,6 @@ public class ConfigScreen extends Screen {
                 return;
             }
         }
-        ChatUtils.sendChatMessage("Invalid file format. Please drop a .mid file.");
+        ChatUtils.sendError("Invalid file format. Please drop a .mid file.");
     }
 }
