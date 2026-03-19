@@ -3,7 +3,7 @@ Minecraft mod that converts midi files `.mid` into schematic files `.litematic`
 
 **Fabric 1.21.11**
 
-Get this mod on [Modrinth](https://modrinth.com/mod/midiblock)! 
+<a href="https://modrinth.com/mod/midiblock"><img alt="modrinth" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg"></a>
 
 ## Usage
 The schematic file is saved to `/schematics` folder with the same filename
